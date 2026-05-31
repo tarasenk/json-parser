@@ -1,0 +1,49 @@
+{
+    "object_edge_cases": {
+        "empty_obj": {},
+        "nested_obj": {
+            "a": {
+                "b": {
+                    "c": true
+                }
+            }
+        },
+        "weird_keys": {
+            "": "empty string key is technically valid!",
+            "special_chars!@#$%^&*()_+": "valid key"
+        }
+    },
+    "array_edge_cases": {
+        "empty_arr": [],
+        "deeply_nested_arr": [
+            [
+                [
+                    [
+                        [
+                            42
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        "mixed_types": [
+            null,
+            false,
+            true,
+            123.45,
+            "hello",
+            [],
+            {}
+        ]
+    },
+    "string_edge_cases": {
+        "escapes": "\"Quotes inside quotes\", \\Backslashes\\, \nNewlines, \tTabs",
+        "unicode_symbols": "\u2615 Coffee, \u231B Hourglass, \u00A9 Copyright, \u03A9 Omega"
+    },
+    "number_edge_cases": {
+        "zero": 0,
+        "negative": -123.45,
+        "scientific_notation_1": 1e+5,
+        "scientific_notation_2": 4.56E-3
+    }
+}
