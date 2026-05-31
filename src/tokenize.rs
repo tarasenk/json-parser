@@ -1,3 +1,5 @@
+use core::fmt;
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum Token {
     LeftBrace,
@@ -21,6 +23,30 @@ pub enum TokenizeError {
     InvalidNumberFormat(String),
     InvalidEscapeSequence(char),
 }
+
+impl fmt::Display for TokenizeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            TokenizeError::UnexpectedEof => {
+                write!(f, "unexpected end of file")
+            }
+            TokenizeError::CharNotRecognized(c) => {
+                write!(f, "character not recognized: '{}'", c)
+            }
+            TokenizeError::UnclosedQuotes => {
+                write!(f, "unclosed quotes")
+            }
+            TokenizeError::InvalidNumberFormat(s) => {
+                write!(f, "invalid number format: {}", s)
+            }
+            TokenizeError::InvalidEscapeSequence(c) => {
+                write!(f, "invalid escape sequence: '\\{}'", c)
+            }
+        }
+    }
+}
+
+impl std::error::Error for TokenizeError {}
 
 pub fn tokenize(input: &str) -> Result<Vec<Token>, TokenizeError> {
     let mut chars = input.chars().peekable();
@@ -295,6 +321,19 @@ mod tests {
         assert_eq!(
             tokenize(input),
             Err(TokenizeError::InvalidEscapeSequence('u'))
+        );
+    }
+
+    #[test]
+    fn test_error_display() {
+        assert_eq!(TokenizeError::UnclosedQuotes.to_string(), "unclosed quotes");
+        assert_eq!(
+            TokenizeError::CharNotRecognized('!').to_string(),
+            "character not recognized: '!'"
+        );
+        assert_eq!(
+            TokenizeError::InvalidEscapeSequence('x').to_string(),
+            "invalid escape sequence: '\\x'"
         );
     }
 }

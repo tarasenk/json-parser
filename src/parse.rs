@@ -1,5 +1,6 @@
 use crate::Value;
 use crate::tokenize::Token;
+use core::fmt;
 use std::collections::HashMap;
 use std::iter::Peekable;
 use std::slice::Iter;
@@ -9,8 +10,38 @@ pub enum ParseError {
     UnexpectedEof,
     UnexpectedToken(Token),
     ExpectedColon,
-    ExpectedComma,
 }
+
+impl fmt::Display for ParseError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            ParseError::UnexpectedEof => {
+                write!(f, "unexpected end of file")
+            }
+            ParseError::UnexpectedToken(token) => {
+                let symbol = match token {
+                    Token::LeftBrace => "{".to_string(),
+                    Token::RightBrace => "}".to_string(),
+                    Token::LeftBracket => "[".to_string(),
+                    Token::RightBracket => "]".to_string(),
+                    Token::Comma => ",".to_string(),
+                    Token::Colon => ":".to_string(),
+                    Token::True => "true".to_string(),
+                    Token::False => "false".to_string(),
+                    Token::Null => "null".to_string(),
+                    Token::String(s) => format!("\"{}\"", s),
+                    Token::Number(n) => n.to_string(),
+                };
+                write!(f, "unexpected token '{}'", symbol)
+            }
+            ParseError::ExpectedColon => {
+                write!(f, "expected ':'")
+            }
+        }
+    }
+}
+
+impl std::error::Error for ParseError {}
 
 /// Takes a flat slice of tokens and constructs a hierarchical JSON value tree.
 pub fn parse(tokens: &[Token]) -> Result<Value, ParseError> {
@@ -167,5 +198,14 @@ mod tests {
         )])])]);
 
         assert_eq!(parsed, expected);
+    }
+
+    #[test]
+    fn test_error_display() {
+        assert_eq!(
+            ParseError::UnexpectedEof.to_string(),
+            "unexpected end of file"
+        );
+        assert_eq!(ParseError::ExpectedColon.to_string(), "expected ':'");
     }
 }
