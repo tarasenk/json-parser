@@ -8,7 +8,7 @@ pub use parse::ParseError;
 pub use tokenize::TokenizeError;
 
 use core::fmt;
-use std::collections::HashMap;
+use indexmap::IndexMap;
 
 /// Represents any valid JSON data type in a structured hierarchical tree.
 #[derive(Debug, PartialEq, Clone)]
@@ -18,7 +18,7 @@ pub enum Value {
     Number(f64),
     String(String),
     Array(Vec<Value>),
-    Object(HashMap<String, Value>),
+    Object(IndexMap<String, Value>),
 }
 
 fn escape_string(s: &str) -> String {
@@ -144,7 +144,7 @@ mod integration_tests {
 
         let result = from_str(json_input).unwrap();
 
-        let mut expected_map = HashMap::new();
+        let mut expected_map = IndexMap::new();
         expected_map.insert(
             "project".to_string(),
             Value::String("Custom JSON Parser".to_string()),

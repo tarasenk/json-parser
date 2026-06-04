@@ -1,6 +1,6 @@
 # json_parser
 
-A JSON parser written from scratch in Rust with no external dependencies.
+A JSON parser written from scratch in Rust.
 
 ## How it works
 

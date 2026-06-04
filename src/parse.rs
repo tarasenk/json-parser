@@ -1,7 +1,7 @@
 use crate::Value;
 use crate::tokenize::Token;
 use core::fmt;
-use std::collections::HashMap;
+use indexmap::IndexMap;
 use std::iter::Peekable;
 use std::slice::Iter;
 
@@ -98,7 +98,7 @@ fn parse_array(tokens: &mut Peekable<Iter<Token>>) -> Result<Value, ParseError> 
 }
 
 fn parse_object(tokens: &mut Peekable<Iter<Token>>) -> Result<Value, ParseError> {
-    let mut map = HashMap::new();
+    let mut map = IndexMap::new();
 
     if matches!(tokens.peek(), Some(&&Token::RightBrace)) {
         tokens.next();
@@ -174,7 +174,7 @@ mod tests {
         let tokens = tokenize(input).unwrap();
         let parsed = parse(&tokens).unwrap();
 
-        let mut expected_map = HashMap::new();
+        let mut expected_map = IndexMap::new();
         expected_map.insert("user".to_string(), Value::String("Bob".to_string()));
         expected_map.insert("age".to_string(), Value::Number(30.0));
         expected_map.insert(
