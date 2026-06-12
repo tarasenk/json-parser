@@ -50,5 +50,4 @@ Unit tests live alongside the code in each module. Integration tests for the ful
 ## Limitations
 
 - No surrogate pair support (`\uD800`–`\uDFFF`)
-- Object insertion order is not preserved
 - Numbers are `f64` large integers may lose precision
